@@ -25,7 +25,7 @@
 #define REPORT_PROTOCOL_MOUSE_REPORT_SIZE      (4)
 #define REPORT_BUFFER_SIZE                     REPORT_PROTOCOL_MOUSE_REPORT_SIZE
 #define LEFT_BUTTON GPIO_NUM_23
-#define RIGHT_BUTTON GPIO_NUM_25
+#define RIGHT_BUTTON GPIO_NUM_14
 
 
 typedef struct {
@@ -46,7 +46,7 @@ uint8_t hid_mouse_descriptor[] = {
     0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
     0x09, 0x02,                    // USAGE (Mouse)
     0xa1, 0x01,                    // COLLECTION (Application)
-
+    
     0x09, 0x01,                    //   USAGE (Pointer)
     0xa1, 0x00,                    //   COLLECTION (Physical)
 
@@ -168,8 +168,8 @@ void mouse_move_task(void *pvParameters)
     int16_t y = 0;
     xyz acc;
     xyz gyro;
-    bool leftButton;
-    bool rightButton;
+    bool leftButton = false;
+    bool rightButton = false;
     for (;;) {
         s_local_param.x_dir = 1;
         for (int i = 0; i < 2; i++) {
@@ -275,7 +275,6 @@ void bt_app_task_shut_down(void)
         vTaskDelete(s_local_param.mouse_task_hdl);
         s_local_param.mouse_task_hdl = NULL;
     }
-
     if (s_local_param.mouse_mutex) {
         vSemaphoreDelete(s_local_param.mouse_mutex);
         s_local_param.mouse_mutex = NULL;
@@ -481,7 +480,7 @@ extern "C" void app_main()
     do {
         s_local_param.app_param.name = "Mouse";
         s_local_param.app_param.description = "Mouse Example";
-        s_local_param.app_param.provider = "ESP32";
+        s_local_param.app_param.provider = "Justin";
         s_local_param.app_param.subclass = ESP_HID_CLASS_MIC;
         s_local_param.app_param.desc_list = hid_mouse_descriptor;
         s_local_param.app_param.desc_list_len = hid_mouse_descriptor_len;
